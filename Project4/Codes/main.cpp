@@ -27,6 +27,7 @@ ofstream ofile;
 
 int main(int argc, char* argv[]) {
 
+
 cout << "\n" << "Which Project Task do you want to run?: " << endl;
 cout << "\n" << "Project Task A & B - Ising Model vs Analytical: " <<  "Write b " << endl;
 cout << "\n" << "Project Task C - Equilibrium: " <<  "Write c " << endl;
@@ -38,18 +39,20 @@ cout << "\n" << "Write here " << endl;
 string Task;
 cin >> Task;
 
+// Task 4A & 4B - Analytical vs Numerical Results for a 2x2 Lattice
+
 if (Task == "b"){
 
 
 // Analytical results for 2x2 lattice
 
-double Z = 2*(exp(8) + exp(-8) + 6);
-double E = 16*(exp(-8) - exp(8))/(Z);
-double Mabs = 8*(exp(8) + 2)/(Z);
-double Cv = 4*64*(4 + 6*exp(8) + 6*exp(-8))/(Z*Z);
-double Xi = (32.0/(Z))*( (exp(8) + 1) - (2.0/(Z))* pow((exp(8) + 2),2) );
+double Z = 2*(exp(8) + exp(-8) + 6); // Calculating the partition function
+double E = 16*(exp(-8) - exp(8))/(Z); // Calculating the Energy
+double Mabs = 8*(exp(8) + 2)/(Z); // Calculating the absolute mean magnetization
+double Cv = 4*64*(4 + 6*exp(8) + 6*exp(-8))/(Z*Z); // Calculating the specific heat
+double Xi = (32.0/(Z))*( (exp(8) + 1) - (2.0/(Z))* pow((exp(8) + 2),2) ); // Calculating the magnetic susceptibility
 
-int NSpins = 2;
+int NSpins = 2; // # Spins
 
 // Divide by number of spins
 double norm = 1.0/NSpins/NSpins;
@@ -68,21 +71,20 @@ ofile.open(file);
 
 ofile << "|   # Monte Carlo cycles  | Energy-Mean | Magnetization-Mean |  Specific heat  | Susceptibility | Energy-STD | Magnetization-STD |\n";
 
-int Nconfigs;
-long int MCcycles;
-double Temp = 1.0;
+int Nconfigs; // # Accepted of configurations
+long int MCcycles; // Monte Carlo cycles
+double Temp = 1.0; // Temperature
 
 cout << "Read in the number of Monte Carlo cycles" << endl;
 cin >> MCcycles;
 
 
-
+// Vectors to store the values for the probability distribution
 vec Energies = zeros<mat>(400);
 vec counter = zeros<mat>(400);
 
 
   // Start Monte Carlo sampling by looping over the selcted Temperatures
-  //for (double Temperature = InitialTemp; Temperature <= FinalTemp; Temperature+=TempStep){
 
   for (int i = 10; i <= MCcycles; i *= 10){
 
@@ -92,26 +94,27 @@ vec counter = zeros<mat>(400);
 
   WriteResultsto4b(ofile, NSpins, i, Temp, ExpectationValues, Nconfigs);
   }
- // }
+
   ofile.close();  // close output file
 }
 
 
-// Task 4c
+// Task 4C - Equilibrium State
 
 if (Task == "c"){
 
   cout << "\n" << "Project Task 4c for ordered and unordered with spin L = 20: " << endl;
 
+// Vectors to store the values for the probability distribution
   vec Energies = zeros<mat>(400);
   vec counter = zeros<mat>(400);
 
   string file = "Ordered";
 
   ofile.open(file);
-  //ofile << setiosflags(ios::showpoint | ios::uppercase);
+
   ofile << "|   # Monte Carlo cycles  | Energy-Mean | Magnetization-Mean | # Accepted configurations |  Specific heat  | Susceptibility | Temperature |\n";
-  // Start Monte Carlo sampling by looping over the selcted Temperatures
+
   int N = 20;
   int Nconfigs;
   long int MC;
@@ -122,13 +125,13 @@ if (Task == "c"){
   cin >> T;
 
 
-  //#pragma omp parallel for
+
   for (int i=1; i <= MC; i += 100){
     vec ExpectationValue = zeros<mat>(5);
 
     // Start Monte Carlo computation and get expectation values
     MetropolisSampling(N, i, T, ExpectationValue, Nconfigs, false, Energies, counter);
-    //
+
     WriteResultstoFile(ofile, N, i, T, ExpectationValue, Nconfigs, false);
   }
   ofile.close();  // close output file
@@ -137,18 +140,18 @@ if (Task == "c"){
   string file2 = "Unordered";
 
   ofile.open(file2);
-  //ofile << setiosflags(ios::showpoint | ios::uppercase);
+
   ofile << "| # Monte Carlo cycles  |  Energy-Mean   |  Magnetization-Mean  |  # Accepted configurations  |  Specific heat  |  Susceptibility   |  Temperature |\n";
 
 
 
-  //#pragma omp parallel for
+
   for (int i=1; i <= MC; i += 100){
     vec ExpectationValue2 = zeros<mat>(5);
 
     // Start Monte Carlo computation and get expectation values
     MetropolisSampling(N, i, T, ExpectationValue2, Nconfigs, true, Energies, counter);
-    //
+
     WriteResultstoFile(ofile, N, i, T, ExpectationValue2, Nconfigs, true);
   }
   ofile.close();  // close output file
@@ -158,13 +161,14 @@ if (Task == "c"){
   string file3 = "Nconfig_vs_Temp";
 
   ofile.open(file3);
-  //ofile << setiosflags(ios::showpoint | ios::uppercase);
+
   ofile << "| Temperature | # Accepted configurations| \n";
 
   double InitialTemp = 1.0;
   double FinalTemp = 2.4;
   double TempStep = 0.2;
 
+// Looping over different temperatures
   for (double Temp = InitialTemp; Temp <= FinalTemp; Temp+=TempStep){
     vec ExpectationValue = zeros<mat>(5);
 
@@ -176,12 +180,13 @@ if (Task == "c"){
    ofile.close();  // close output file
 }
 
-// Task 4d
+// Task 4D - Probability Distribution
 
 if (Task == "d"){
 
   cout << "\n" << "Project Task 4d for Probability, with spin L = 20 and T = 1.0: " << endl;
 
+// Vectors to store the values for the probability distribution
   vec Energies = zeros<mat>(400);
   vec counter = zeros<mat>(400);
 
@@ -190,17 +195,16 @@ if (Task == "d"){
   ofile.open(file);
 
   ofile << "|  Energies | Energy counts |\n";
-  // Start Monte Carlo sampling by looping over the selcted Temperatures
-  int N = 20;
+
+  int N = 20; // # Spins
   int Nconfigs; // # Accepted of configurations
   double T = 1.0; // Temperature
 
-  long int MC;
+  long int MC; // # Monte Carlo cycles
   cout << "Read in the number of Monte Carlo cycles in times of 100" << endl;
   cin >> MC;
 
   int iterations;
-  //#pragma omp parallel for
   for (int i=1; i <= MC; i++){
     vec ExpectationValue = zeros<mat>(5);
     iterations = 100*i;
@@ -225,9 +229,8 @@ if (Task == "d"){
   ofile.open(file2);
 
   ofile << "|  Energies | Energy counts |\n";
-  // Start Monte Carlo sampling by looping over the selcted Temperatures
 
-  //#pragma omp parallel for
+  // Start Monte Carlo sampling by looping over selected MC cycles
   for (int i=1; i <= MC; i++){
     vec ExpectationValue = zeros<mat>(5);
     iterations = 100*i;
@@ -243,12 +246,13 @@ ofile.close();  // close output file
 
 }
 
-// Task 4c
+// Task 4E & 4F - Phase Transition & Critical Temperature
 
 if (Task == "e"){
 
 cout << "Project Task 4e: " << endl;
 
+// Vectors to store the values for the probability distribution
 vec Energies = zeros<mat>(400);
 vec counter = zeros<mat>(400);
 
@@ -257,14 +261,13 @@ string file = "Temperature";
 ofile.open(file);
 ofile << "| Temperature | Energy-Mean | Magnetization-Mean |  Specific heat  | Susceptibility |\n";
 
-// Start Monte Carlo sampling by looping over the selcted Temperatures
+
 int N_start, N_step, N_final, n;
 int Nconfigs;
 long int MC;
 double T_start, T_step, T_final, T;
 
-// cout << "Read in the number of spins" << endl;
-// cin >> N;
+
 cout << "Read in the number of Monte Carlo cycles" << endl;
 cin >> MC;
 
@@ -295,10 +298,11 @@ N_final = 100;
 double start = omp_get_wtime();
 vec Tvalues = zeros<mat>(n);
 
+// Looping over all the lattices with spins = 40, 60, 80, 100
 for (int N = N_start; N <= N_final; N += N_step){
 
 
-
+// Parallelization using openmp
 #pragma omp parallel for
 // Start Monte Carlo sampling by looping over the selcted Temperatures
 for (int i = 0; i < n; i++){
@@ -311,42 +315,43 @@ for (int i = 0; i < n; i++){
   MetropolisSampling(N, MC, T, ExpectationValue, Nconfigs, false, Energies, counter);
   //
 
+// Storing the values for the lattice with spin = 40
   if (N == 40){
     L_40.row(i) = ExpectationValue.t();
   }
 
+// Storing the values for the lattice with spin = 60
   else if (N == 60){
     L_60.row(i) = ExpectationValue.t();
   }
 
+// Storing the values for the lattice with spin = 80
   else if (N == 80){
     L_80.row(i) = ExpectationValue.t();
   }
 
+// Storing the values for the lattice with spin = 100
   else{
     L_100.row(i) = ExpectationValue.t();
   }
 
-//#pragma omp ordered
-  //WriteResultstoFile2(ofile, N, MC, T, ExpectationValue, Nconfigs);
+
 }
 
 }
+
 double finish = omp_get_wtime();
 double time_used = finish - start;
 cout << "Time used [s]: " << time_used << endl;
 
 WriteT(ofile, L_40, 40, MC, Tvalues);
-//ofile <<"\n";
+
 WriteT(ofile, L_60, 60, MC, Tvalues);
-//ofile <<"\n";
+
 WriteT(ofile, L_80, 80, MC, Tvalues);
-//ofile <<"\n";
+
 WriteT(ofile, L_100, 100, MC, Tvalues);
 ofile.close();  // close output file
-
-
-
 
 }
 
