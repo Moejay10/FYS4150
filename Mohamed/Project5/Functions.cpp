@@ -111,7 +111,7 @@ void g(mat &u, int N){
     double dx = 1.0/N;
 
     for (int i = 1; i < N; i++){
-      u(0,i) = sin(pi*i*dx);
+      u(0,i) = 0;
   }
 }
 

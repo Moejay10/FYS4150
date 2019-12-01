@@ -91,16 +91,16 @@ int main(int argc, char* argv[]){
 
 if (Method == "FE"){
   forward_euler(alpha, u, N, T);
-  cout << (u_analytic - u) << endl;
+  cout << u << endl;
 
 }
 if (Method == "BE"){
   backward_euler(alpha,u,N,T);
-  cout << (u_analytic - u) << endl;
+  cout << u << endl;
 }
 if (Method == "CN"){
   crank_nicolson(alpha, u, N, T);
-  cout << (u_analytic - u) << endl;
+  cout << u << endl;
 }
 
 
