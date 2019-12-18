@@ -34,7 +34,7 @@ This project is the product of the collaboration between Mohamed Ismail \& Jens 
 
 # Project 5
 
-## Numerical Methods for Partial Differential Equations - Diffusion
+## Numerical Methods for Partial Differential Equations 
 In this project we want to study the numerical stability of three methods for partial differential equations (PDEs). The methods we will study are the Forward Euler, Backward Euler, Crank-Nicolsen
 
 This project is the product of the collaboration between Mohamed Ismail \& Jens Bratten Due.
