@@ -1,4 +1,4 @@
-# Reproducibility Guide :closed_book: <img align ="right" width="434" height="43" src="https://user-images.githubusercontent.com/54407312/68308291-e97ed600-00ac-11ea-829f-992cf0c9a1eb.gif">
+# Reproducibility Guide :
 
 ## Project 1: Ordinary Differential Equations & Linear Algebra
 
