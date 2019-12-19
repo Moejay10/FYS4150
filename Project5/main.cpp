@@ -285,7 +285,7 @@ if (Task == "2"){
 
 
 
-  for (int Case = 1; Case < 5; Case++){
+  for (int Case = 1; Case < 4; Case++){
   Lithosphere(Case, dx, dt, tolerance, maxiter);
     }
 

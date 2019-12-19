@@ -32,9 +32,8 @@ int JacobiSolver(mat &, double, double, double, int);
 // Lithosphere functions
 void Lithosphere(int, double, double, double, int);
 void Heat(mat &, int, int);
-void NoHeat(mat &, int, int);
+void Qzones(vec &, double, double, int);
 void Decay(vec &, int T, double Q_s);
-
 
 
 #endif

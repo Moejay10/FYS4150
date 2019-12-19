@@ -288,36 +288,34 @@ void Lithosphere(int Case, double dx, double dt, double tol, int maxiter){
    string file;
 
 
-  double Qmantle = 0; // represents the constant Q term in the mantle
-  if (Case == 1) {
-    file = "No_Heat";
-  } else if (Case == 2) {
+  double Qmantle = 0; // represents the constant Q factor in the mantle
+  if (Case == 1){
     file = "Heat";
     Qmantle = 0.05;
-  } else if (Case == 3) {
+  }
+  else if (Case == 2){
     file = "No_Decay";
     Qmantle = 0.55;
-  } else if (Case == 4) {
+  }
+  else if (Case == 3){
     file = "Decay";
     Qmantle = 0.05;
-  } else {
-    cout << "Error, Case must be 1,2,3,4.\n";
+  }
+  else{
+    cout << "Error, Case must be 1,2 or 3.\n";
     exit(1);
   }
   ofile.open(file);
   // initialization
-  int Nx = int(1.25/dx); // 0-150 km wide
-  int Ny = int(1/dx); // 0-120 km deep
+  int Nx = int(1.25/dx); // 0-150 km wide, but is scaled
+  int Ny = int(1/dx); // 0-120 km deep, , but is scaled
   int T = int(1/dt); // number of time steps
+
   mat u = zeros<mat>(Nx+1,Ny+1);
 
-// Applying the cases
-  if (Case == 1){
-    NoHeat(u,Nx,Ny);
-  }
-  else {
-    Heat(u,Nx,Ny);
-  }
+// Applying heat production for all the cases
+  Heat(u,Nx,Ny);
+
   mat u_prev = u;
 
   // Constants and variables
@@ -337,18 +335,11 @@ void Lithosphere(int Case, double dx, double dt, double tol, int maxiter){
 
   // Construction of Q_vec: stores constant heat production in zones:
   vec Q_vec = zeros<vec>(Ny+1);
-  if (Case != 1){
-    double Q1 = 1.4*Q_s;
-    double Q2 = 0.35*Q_s;
-    double Q3 = Qmantle*Q_s;
-    for (int i = 0; i < 17; i++) Q_vec(i) = Q1; // 0-20 km depth
-    for (int i = 17; i < 34; i++) Q_vec(i) = Q2; // 20-40 km depth
-    for (int i = 34; i <= Ny; i++) Q_vec(i) = Q3; // 40-120 km depth
-  }
+  Qzones(Q_vec, Q_s, Qmantle, Ny);
 
-  // EConstruction of Q_time: stores time dependet heat production (due to decay):
+  // Construction of Q_time: stores timedependent heat production due to decay, which is case 3:
   vec Q_time = zeros<vec>(T+1);
-  if (Case == 4){ // Q_time is simply 0 for cases 1-3
+  if (Case == 3){ // Only decay for case 3
     Decay(Q_time, T, Q_s);
   }
 
@@ -383,20 +374,6 @@ void Lithosphere(int Case, double dx, double dt, double tol, int maxiter){
   ofile.close();
 }
 
-void NoHeat(mat& u, int Nx, int Ny){
-  // Creates boundary conditions for the case of Q = 0 everywhere
-  for (int i = 0; i < Nx+1; i++){
-    u(i,0) = 0;
-    u(i,Ny) = 1;
-  }
-  // linear temperature from 0-1 (scaled)
-  for (int i = 0; i < Nx+1; i += Nx){
-    for (double j = 0; j < Ny+1; j++){
-      u(i,j) = (double) j/Ny;
-      u(i,j) = (double) j/Ny;
-    }
-  }
-}
 
 void Heat(mat& u, int Nx, int Ny){
   // Analytical solution to steady state Temp(depth) with heat production
@@ -434,6 +411,16 @@ void Heat(mat& u, int Nx, int Ny){
     }
   }
 }
+
+void Qzones(vec &Q_vec, double Q_s, double Qmantle, int Ny){
+  double Q1 = 1.4*Q_s;
+  double Q2 = 0.35*Q_s;
+  double Q3 = Qmantle*Q_s;
+  for (int i = 0; i < 17; i++) Q_vec(i) = Q1; // 0-20 km depth
+  for (int i = 17; i < 34; i++) Q_vec(i) = Q2; // 20-40 km depth
+  for (int i = 34; i <= Ny; i++) Q_vec(i) = Q3; // 40-120 km depth
+}
+
 
 void Decay(vec& Q_time, int T, double Q_s){
   double Uranium, Thorium, Potassium, times;
