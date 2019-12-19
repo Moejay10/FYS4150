@@ -1,4 +1,6 @@
+# Project 1
 
+## Ordinary Differential Equations & Linear Algebra
 Reproducing the results found in this directory is essential and this file is supposed to make it possible for another person to verify that these results are indeed correct. This file contains a guide on how the programs should be run without any problems and/or errors occuring.
 
 All of the files are supposed to be in the same folder and that includes:
