@@ -19,6 +19,7 @@ The required packages to run the Python scripts are
 - tqdm
 - os
 
+## How to run the files
 Compile `main.cpp` as `c++ -O3 -fopenmp -o <executable> main.cpp Functions.cpp` and run with `./<executable>`
 
 All plots are then produced by running `python3 plotter.py`
