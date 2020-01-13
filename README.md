@@ -26,7 +26,7 @@ This project is the product of the collaboration between Marius Enga, Mohamed Is
 
 # Project 4
 
-## Statistical Physics \& the Ising Model
+## Statistical Physics \& The Ising Model
 In this project we will use the widely popular Ising model to study the phase transitions in a magnetic system.
 
 This project is the product of the collaboration between Mohamed Ismail \& Jens Bratten Due.
@@ -34,7 +34,7 @@ This project is the product of the collaboration between Mohamed Ismail \& Jens 
 
 # Project 5
 
-## Partial Differential Equations 
+## Partial Differential Equations
 In this project we want to study the numerical stability of three methods for partial differential equations (PDEs). The methods we will study are the Forward Euler, Backward Euler, Crank-Nicolsen
 
 This project is the product of the collaboration between Mohamed Ismail \& Jens Bratten Due.
